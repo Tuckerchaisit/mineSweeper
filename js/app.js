@@ -38,12 +38,12 @@ function render(){
   
 }
 function placeBomb(){ //while numBombs is more than 0 then place bomb randomly on the board until numBombs is 0// bomb is equal to -1
-  let probability;
+  let placeBombChance;
   while(bombCounts>0){
     for(let i=0; i<board.length; i++){
-      probability=Math.random();
+      placeBombChance=Math.random();
       //console.log(probability);
-      if(probability<0.0476190476 && board[i]===null){
+      if(placeBombChance<0.0476190476 && board[i]===null){
         board[i]=-1;
         bombCounts--;
         console.log(bombCounts);
