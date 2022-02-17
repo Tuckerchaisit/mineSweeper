@@ -7,6 +7,7 @@ let board;
 let bombCounts;
 let flagCounts;
 let counter=0;
+let adjacentCount;
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -18,7 +19,7 @@ sq.forEach( (square,index) =>{
   square.addEventListener('click',() => handleClick(index));
   }
 )
-
+//todo: use contextmenu for right click to flag mine
 
 /*-------------------------------- Functions --------------------------------*/
 init();
@@ -30,8 +31,8 @@ function init(){
   placeBomb();
   showBomb();
   render();
-  console.log(board)
-  console.log(counter);
+  checkAdjacent();
+  console.log(adjacentCount);
 }
 
 function render(){
@@ -42,11 +43,9 @@ function placeBomb(){ //while numBombs is more than 0 then place bomb randomly o
   while(bombCounts>0){
     for(let i=0; i<board.length; i++){
       placeBombChance=Math.random();
-      //console.log(probability);
       if(placeBombChance<0.0476190476 && board[i]===null){
         board[i]=-1;
         bombCounts--;
-        console.log(bombCounts);
         if(bombCounts===0){
           break;
         }
@@ -65,11 +64,28 @@ function showBomb(){
 }
 
 function handleClick(index){
-  
+  checkAdjacent(index);
+  console.log(adjacentCount);
 }
 
-function checkAdjacent(index){
-
+function checkAdjacent(index){ //TODO
+  adjacentCount=0;
+  for(let i=(index-11);i<(index-8); i++){
+    if(board[i]===-1){
+      adjacentCount++;
+    }
+  }
+  for(let i=(index-1);i<(index+2); i+=2){
+    if(board[i]===-1){
+      adjacentCount++;
+    }
+  }
+  for(let i=(index+9);i<(index+12); i++){
+    if(board[i]===-1){
+      adjacentCount++;
+    }
+  }
+  return adjacentCount;
 }
 
 function isTopEdge(index){
