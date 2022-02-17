@@ -63,11 +63,16 @@ function showBomb() {
 
 function handleClick(index) {
   checkAdjacentBomb(index);
-  console.log(adjacentCountBomb);
-  // console.log(index);
+  showAdjacentBomb(index);
 }
 
-function checkAdjacentBomb(index) { //TODO
+function showAdjacentBomb(index){
+  if(adjacentCountBomb!==0){
+    sq[index].textContent = adjacentCountBomb;
+  }
+}
+
+function checkAdjacentBomb(index) { 
   adjacentCountBomb = 0;
   if (index === 0) { //check top left corner
     if (board[1] === -1) {
