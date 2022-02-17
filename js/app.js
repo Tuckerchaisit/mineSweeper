@@ -9,7 +9,7 @@ let bombCounts;
 let flagCounts =0;
 let adjacentCountBomb;
 let isGameOver = 0; //0 is not over, 1 if the game is over
-let numSqCheck=0;
+let numSqCount =0;
 
 /*------------------------ Cached Element References ------------------------*/
 const sq = Array.from(document.querySelectorAll(".sq"));
@@ -37,7 +37,7 @@ function init() {
   bombCounts = 21;
 
   placeBomb();
-  //showBomb();
+  showBomb();
   getAdjacentBomb();
   flagStat.textContent= `🚩 : ${flagCounts}`;
   render();
@@ -80,9 +80,14 @@ function handleClick(index) {
     return
   }else{
     checkEmptySq(index);
+    
+    setTimeout(function(){
+      getNumSqCount();
+      console.log(board);
+      console.log(numSqCount);
+    },500);
     isWinner();
   }
-  console.log(numSqCheck);
 }
 function handleRightClick(index) {
   if(isGameOver===1){ //check if the game is over yet
@@ -91,27 +96,34 @@ function handleRightClick(index) {
     if(sq[index].textContent==="🚩"){
       sq[index].textContent="";
       flagCounts--;
-      numSqCheck--;
+      
       flagStat.textContent= `🚩 : ${flagCounts}`;
     }else{
       sq[index].textContent="🚩";
       flagCounts++;
-      numSqCheck++;
+      
       flagStat.textContent= `🚩 : ${flagCounts}`;
       isWinner();
     }
   }
-  console.log(numSqCheck);
+  
 }
 
 function isWinner(){
-  if((isGameOver===0) && (flagCounts===21) && (numSqCheck===79)){
+  if((isGameOver===0) && (flagCounts===21) && (numSqCount===79)){
     alert('You Won');
     isGameOver = 1;
   }
 }
 
-
+function getNumSqCount(){
+  numSqCount=0;
+  for(let i =0; i<board.length; i++){
+    if(board[i]===-2){
+      numSqCount++;
+    }
+  }
+}
 
 function checkEmptySq(index) {
   if(board[index]===-1){
@@ -120,71 +132,90 @@ function checkEmptySq(index) {
     isGameOver = 1; //change the state of the game once the player pressed on bomb
   }
 
-  if ((board[index] !== 0) && (board[index] !== -1)) { // if there's no bomb and the sq is not empty then show the adjacentBomb number on the sq
+  if ((board[index] !== 0) && (board[index] !== -1) && (board[index] !== -2)) { // if there's no bomb and the sq is not empty then show the adjacentBomb number on the sq
     sq[index].textContent = board[index];
-    numSqCheck++;
-  } 
-  setTimeout(() => {
-      if ((board[index] !== -1)&&(board[index]===0) ) {
-        if (index === 0) {
-          checkEmptySq(1);
-          checkEmptySq(10);
-          checkEmptySq(11);
-        } else {
-          if (index === 9) {
-            checkEmptySq(8);
-            checkEmptySq(18);
-            checkEmptySq(19);
+    board[index]= -2;
+  }else{
+    
+    setTimeout(() => {
+        if ((board[index] !== -1)&&(board[index]===0) ) {
+         
+          if (index === 0) {
+            board[index]=-2;
+            checkEmptySq(1);
+            checkEmptySq(10);
+            checkEmptySq(11);
+            
           } else {
-            if (index === 90) {
-              checkEmptySq(80);
-              checkEmptySq(81);
-              checkEmptySq(91);
+            if (index === 9) {
+              board[index]=-2;
+              checkEmptySq(8);
+              checkEmptySq(18);
+              checkEmptySq(19);
+              
             } else {
-              if (index === 99) {
-                checkEmptySq(88);
-                checkEmptySq(89);
-                checkEmptySq(98);
+              if (index === 90) {
+                board[index]=-2;
+                checkEmptySq(80);
+                checkEmptySq(81);
+                checkEmptySq(91);
+                
               } else {
-                if (isTopEdge(index) === true) {
-                  for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
-                    checkEmptySq(i);
-                  }
-                  for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
-                    checkEmptySq(i);
-                  }
+                if (index === 99) {
+                  board[index]=-2;
+                  checkEmptySq(88);
+                  checkEmptySq(89);
+                  checkEmptySq(98);
                 } else {
-                  if (isLeftEdge(index) === true) {
-                    checkEmptySq((index-10));
-                    checkEmptySq((index-9));
-                    checkEmptySq((index+1));
-                    checkEmptySq((index+10));
-                    checkEmptySq((index+11));
-                    
+                  if (isTopEdge(index) === true) {
+                    for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                      board[index]=-2;
+                      checkEmptySq(i);
+                    }
+                    for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
+                      board[index]=-2;
+                      checkEmptySq(i);
+                    }
                   } else {
-                    if (isRightEdge(index) === true) {
-                      checkEmptySq((index-11))
-                      checkEmptySq((index-10))
-                      checkEmptySq((index-1))
-                      checkEmptySq((index+9))
-                      checkEmptySq((index+10))
+                    if (isLeftEdge(index) === true) {
+                      board[index]=-2;
+                      checkEmptySq((index-10));
+                      checkEmptySq((index-9));
+                      checkEmptySq((index+1));
+                      checkEmptySq((index+10));
+                      checkEmptySq((index+11));
+                      
                     } else {
-                      if (isBottomEdge(index) === true) {
-                        for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
-                          checkEmptySq(i);
-                        }
-                        for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
-                          checkEmptySq(i);
-                        }
+                      if (isRightEdge(index) === true) {
+                        board[index]=-2;
+                        checkEmptySq((index-11))
+                        checkEmptySq((index-10))
+                        checkEmptySq((index-1))
+                        checkEmptySq((index+9))
+                        checkEmptySq((index+10))
                       } else {
-                        for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
-                          checkEmptySq(i);
-                        }
-                        for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
-                          checkEmptySq(i);
-                        }
-                        for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
-                          checkEmptySq(i);
+                        if (isBottomEdge(index) === true) {
+                          for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
+                            board[index]=-2;
+                            checkEmptySq(i);
+                          }
+                          for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                            board[index]=-2;
+                            checkEmptySq(i);
+                          }
+                        } else {
+                          for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
+                            board[index]=-2;
+                            checkEmptySq(i);
+                          }
+                          for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                            board[index]=-2;
+                            checkEmptySq(i);
+                          }
+                          for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
+                            board[index]=-2;
+                            checkEmptySq(i);
+                          }
                         }
                       }
                     }
@@ -194,8 +225,8 @@ function checkEmptySq(index) {
             }
           }
         }
-      }
-  }, 10)
+    }, 10)
+  } 
   
 }
 
