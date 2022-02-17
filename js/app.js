@@ -1,3 +1,4 @@
+//todo win condition: if flagCounts is equal to number of bombs and there's no square that has not been check
 /*-------------------------------- Constants --------------------------------*/
 
 
@@ -8,6 +9,7 @@ let bombCounts;
 let flagCounts =0;
 let adjacentCountBomb;
 let isGameOver = 0; //0 is not over, 1 if the game is over
+let numSqCheck=0;
 
 /*------------------------ Cached Element References ------------------------*/
 const sq = Array.from(document.querySelectorAll(".sq"));
@@ -39,7 +41,7 @@ function init() {
   getAdjacentBomb();
   flagStat.textContent= `🚩 : ${flagCounts}`;
   render();
-  console.log(board);
+  // console.log(board);
 }
 
 function reset(){
@@ -47,7 +49,7 @@ function reset(){
 }
 
 function render() {
-
+  
 }
 function placeBomb() { //while numBombs is more than 0 then place bomb randomly on the board until numBombs is 0// bomb is equal to -1
   let placeBombChance;
@@ -78,7 +80,9 @@ function handleClick(index) {
     return
   }else{
     checkEmptySq(index);
+    isWinner();
   }
+  console.log(numSqCheck);
 }
 function handleRightClick(index) {
   if(isGameOver===1){ //check if the game is over yet
@@ -87,12 +91,23 @@ function handleRightClick(index) {
     if(sq[index].textContent==="🚩"){
       sq[index].textContent="";
       flagCounts--;
+      numSqCheck--;
       flagStat.textContent= `🚩 : ${flagCounts}`;
     }else{
       sq[index].textContent="🚩";
       flagCounts++;
+      numSqCheck++;
       flagStat.textContent= `🚩 : ${flagCounts}`;
+      isWinner();
     }
+  }
+  console.log(numSqCheck);
+}
+
+function isWinner(){
+  if((isGameOver===0) && (flagCounts===21) && (numSqCheck===79)){
+    alert('You Won');
+    isGameOver = 1;
   }
 }
 
@@ -107,6 +122,7 @@ function checkEmptySq(index) {
 
   if ((board[index] !== 0) && (board[index] !== -1)) { // if there's no bomb and the sq is not empty then show the adjacentBomb number on the sq
     sq[index].textContent = board[index];
+    numSqCheck++;
   } 
   setTimeout(() => {
       if ((board[index] !== -1)&&(board[index]===0) ) {
