@@ -6,7 +6,7 @@
 let board;
 let bombCounts;
 let flagCounts;
-let counter = 0;
+
 let adjacentCountBomb;
 let isGameOver = 0; //0 is not over, 1 if the game is over
 
@@ -20,7 +20,11 @@ sq.forEach((square, index) => {
   square.addEventListener('click', () => handleClick(index));
 }
 )
-// resetBtn.addEventListener('click', location.reload());
+sq.forEach((square, index) => {
+  square.addEventListener('contextmenu', () => handleRightClick(index));
+}
+)
+resetBtn.addEventListener('click', reset);
 //todo: use contextmenu for right click to flag mine
 
 /*-------------------------------- Functions --------------------------------*/
@@ -32,11 +36,15 @@ function init() {
   bombCounts = 21;
 
   placeBomb();
-  showBomb();
+  //showBomb();
   getAdjacentBomb();
-  // hideBoard();
+  
   render();
   console.log(board);
+}
+
+function reset(){
+    location.reload();
 }
 
 function render() {
@@ -62,26 +70,37 @@ function showBomb() {
   for (let i = 0; i < board.length; i++) {
     if (board[i] === -1) {
       sq[i].textContent = '💣';
-      counter++;
     }
   }
 }
 
 function handleClick(index) {
-  if(isGameOver===1){
+  if(isGameOver===1){ //check if the game is over yet
     return
   }else{
     checkEmptySq(index);
   }
 }
+function handleRightClick(index) {
+  if(isGameOver===1){ //check if the game is over yet
+    return
+  }else{
+    if(sq[index].textContent==="🚩"){
+      sq[index].textContent="";
+    }else{
+      sq[index].textContent="🚩";
+      flagCounts++;
+    }
+  }
+}
+
+
 
 function checkEmptySq(index) {
   if(board[index]===-1){
     showBomb();
     alert('Game Over, You lost');
-    isGameOver = 1;
-    // sq.forEach(square => square.removeEventListener('click'))
-    //location.reload();
+    isGameOver = 1; //change the state of the game once the player pressed on bomb
   }
 
   if ((board[index] !== 0) && (board[index] !== -1)) { // if there's no bomb and the sq is not empty then show the adjacentBomb number on the sq
@@ -158,8 +177,6 @@ function checkEmptySq(index) {
           }
         }
       }
-    
-
   }, 10)
   
 }
@@ -328,11 +345,3 @@ function isBottomEdge(index) {
   }
 }
 
-// function hideBoard(){
-//   for(let i=0; i<board.length; i++){
-//     if(board[i]!==-1){
-
-//       sq[i].textContent="";
-//     }
-//   }
-// }
