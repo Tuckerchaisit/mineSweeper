@@ -37,7 +37,7 @@ function init() {
   bombCounts = 21;
 
   placeBomb();
-  showBomb();
+  // showBomb();
   getAdjacentBomb();
   flagStat.textContent= `🚩 : ${flagCounts}`;
   render();
@@ -49,7 +49,7 @@ function reset(){
 }
 
 function render() {
-  
+  isWinner();
 }
 function placeBomb() { //while numBombs is more than 0 then place bomb randomly on the board until numBombs is 0// bomb is equal to -1
   let placeBombChance;
@@ -86,7 +86,7 @@ function handleClick(index) {
       console.log(board);
       console.log(numSqCount);
     },500);
-    isWinner();
+    render();
   }
 }
 function handleRightClick(index) {
@@ -103,7 +103,7 @@ function handleRightClick(index) {
       flagCounts++;
       
       flagStat.textContent= `🚩 : ${flagCounts}`;
-      isWinner();
+      render();
     }
   }
   
