@@ -7,7 +7,7 @@ let board;
 let bombCounts;
 let flagCounts;
 let counter = 0;
-let adjacentCount;
+let adjacentCountBomb;
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -62,82 +62,128 @@ function showBomb() {
 }
 
 function handleClick(index) {
-  checkAdjacent(index);
-  console.log(adjacentCount);
+  checkAdjacentBomb(index);
+  console.log(adjacentCountBomb);
   // console.log(index);
 }
 
-function checkAdjacent(index) { //TODO
-  adjacentCount = 0;
-  if (index === 0) {
+function checkAdjacentBomb(index) { //TODO
+  adjacentCountBomb = 0;
+  if (index === 0) { //check top left corner
     if (board[1] === -1) {
-      adjacentCount++;
+      adjacentCountBomb++;
     }
     if (board[10] === -1) {
-      adjacentCount++;
+      adjacentCountBomb++;
     }
     if (board[11] === -1) {
-      adjacentCount++;
+      adjacentCountBomb++;
     }
   } else {
-    if (index === 9) {
+    if (index === 9) { //check top right corner
       if (board[8] === -1) {
-        adjacentCount++;
+        adjacentCountBomb++;
       }
       if (board[18] === -1) {
-        adjacentCount++;
+        adjacentCountBomb++;
       }
       if (board[19] === -1) {
-        adjacentCount++;
+        adjacentCountBomb++;
       }
     } else {
-      if (index === 90) {
+      if (index === 90) { //check bottom left corner
         if (board[80] === -1) {
-          adjacentCount++;
+          adjacentCountBomb++;
         }
         if (board[81] === -1) {
-          adjacentCount++;
+          adjacentCountBomb++;
         }
         if (board[91] === -1) {
-          adjacentCount++;
+          adjacentCountBomb++;
         }
       } else {
-        if (index === 99) {
+        if (index === 99) { //check bottom right corner
           if (board[88] === -1) {
-            adjacentCount++;
+            adjacentCountBomb++;
           }
           if (board[89] === -1) {
-            adjacentCount++;
+            adjacentCountBomb++;
           }
           if (board[98] === -1) {
-            adjacentCount++;
+            adjacentCountBomb++;
           }
         } else {
           if (isTopEdge(index) === true) {
-
+            for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+              if (board[i] === -1) {
+                adjacentCountBomb++;
+              }
+            }
+            for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
+              if (board[i] === -1) {
+                adjacentCountBomb++;
+              }
+            }
           } else {
             if (isLeftEdge(index) === true) {
-
+              if (board[(index-10)] === -1) {
+                adjacentCountBomb++;
+              }
+              if (board[(index-9)] === -1) {
+                adjacentCountBomb++;
+              }
+              if (board[(index+1)] === -1) {
+                adjacentCountBomb++;
+              }
+              if (board[(index+10)] === -1) {
+                adjacentCountBomb++;
+              }
+              if (board[(index+11)] === -1) {
+                adjacentCountBomb++;
+              }
             } else {
               if (isRightEdge(index) === true) {
-
+                if (board[(index-11)] === -1) {
+                  adjacentCountBomb++;
+                }
+                if (board[(index-10)] === -1) {
+                  adjacentCountBomb++;
+                }
+                if (board[(index-1)] === -1) {
+                  adjacentCountBomb++;
+                }
+                if (board[(index+9)] === -1) {
+                  adjacentCountBomb++;
+                }
+                if (board[(index+10)] === -1) {
+                  adjacentCountBomb++;
+                }
               } else {
                 if (isBottomEdge(index) === true) {
-
-                } else {
                   for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
                     if (board[i] === -1) {
-                      adjacentCount++;
+                      adjacentCountBomb++;
                     }
                   }
                   for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
                     if (board[i] === -1) {
-                      adjacentCount++;
+                      adjacentCountBomb++;
+                    }
+                  }
+                } else {
+                  for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
+                    if (board[i] === -1) {
+                      adjacentCountBomb++;
+                    }
+                  }
+                  for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                    if (board[i] === -1) {
+                      adjacentCountBomb++;
                     }
                   }
                   for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
                     if (board[i] === -1) {
-                      adjacentCount++;
+                      adjacentCountBomb++;
                     }
                   }
                 }
@@ -149,7 +195,7 @@ function checkAdjacent(index) { //TODO
     }
   }
 
-  return adjacentCount;
+  return adjacentCountBomb;
 }
 
 function isTopEdge(index) {
