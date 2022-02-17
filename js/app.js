@@ -30,7 +30,9 @@ function init() {
   bombCounts = 21;
   placeBomb();
   showBomb();
+  getAdjacentBomb();
   render();
+  console.log(board);
 }
 
 function render() {
@@ -62,17 +64,103 @@ function showBomb() {
 }
 
 function handleClick(index) {
-  checkAdjacentBomb(index);
-  showAdjacentBomb(index);
+  checkEmptySq(index);
 }
 
-function showAdjacentBomb(index){
-  if(adjacentCountBomb!==0){
-    sq[index].textContent = adjacentCountBomb;
+function checkEmptySq(index) {
+  if ((board[index] !== 0) && (board[index] !== -1)) {
+    sq[index].textContent = board[index];
+  } 
+  setTimeout(() => {
+      if ((board[index] !== -1)&&(board[index]===0) ) {
+        if (index === 0) {
+          checkEmptySq(1);
+          checkEmptySq(10);
+          checkEmptySq(11);
+        } else {
+          if (index === 9) {
+            checkEmptySq(8);
+            checkEmptySq(18);
+            checkEmptySq(19);
+          } else {
+            if (index === 90) {
+              checkEmptySq(80);
+              checkEmptySq(81);
+              checkEmptySq(91);
+            } else {
+              if (index === 99) {
+                checkEmptySq(88);
+                checkEmptySq(89);
+                checkEmptySq(98);
+              } else {
+                if (isTopEdge(index) === true) {
+                  for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                    checkEmptySq(i);
+                  }
+                  for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
+                    checkEmptySq(i);
+                  }
+                } else {
+                  if (isLeftEdge(index) === true) {
+                    checkEmptySq((index-10));
+                    checkEmptySq((index-9));
+                    checkEmptySq((index+1));
+                    checkEmptySq((index+10));
+                    checkEmptySq((index+11));
+                    
+                  } else {
+                    if (isRightEdge(index) === true) {
+                      checkEmptySq((index-11))
+                      checkEmptySq((index-10))
+                      checkEmptySq((index-1))
+                      checkEmptySq((index+9))
+                      checkEmptySq((index+10))
+                    } else {
+                      if (isBottomEdge(index) === true) {
+                        for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
+                          checkEmptySq(i);
+                        }
+                        for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                          checkEmptySq(i);
+                        }
+                      } else {
+                        for (let i = (index - 11); i < (index - 8); i++) { //check upper sqs
+                          checkEmptySq(i);
+                        }
+                        for (let i = (index - 1); i < (index + 2); i += 2) { //check sq on the side
+                          checkEmptySq(i);
+                        }
+                        for (let i = (index + 9); i < (index + 12); i++) { //check lower sqs
+                          checkEmptySq(i);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    
+
+  }, 10)
+  void sq[index].offsetHeight;
+}
+
+function getAdjacentBomb() {
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] !== -1) {
+      checkAdjacentBomb(i);
+      board[i] = adjacentCountBomb;
+      // if(adjacentCountBomb!==0){                  //TODO comment this out to stop showing the nums
+      //   sq[i].textContent = adjacentCountBomb;
+      // }
+    }
   }
 }
 
-function checkAdjacentBomb(index) { 
+function checkAdjacentBomb(index) {
   adjacentCountBomb = 0;
   if (index === 0) { //check top left corner
     if (board[1] === -1) {
@@ -131,36 +219,36 @@ function checkAdjacentBomb(index) {
             }
           } else {
             if (isLeftEdge(index) === true) {
-              if (board[(index-10)] === -1) {
+              if (board[(index - 10)] === -1) {
                 adjacentCountBomb++;
               }
-              if (board[(index-9)] === -1) {
+              if (board[(index - 9)] === -1) {
                 adjacentCountBomb++;
               }
-              if (board[(index+1)] === -1) {
+              if (board[(index + 1)] === -1) {
                 adjacentCountBomb++;
               }
-              if (board[(index+10)] === -1) {
+              if (board[(index + 10)] === -1) {
                 adjacentCountBomb++;
               }
-              if (board[(index+11)] === -1) {
+              if (board[(index + 11)] === -1) {
                 adjacentCountBomb++;
               }
             } else {
               if (isRightEdge(index) === true) {
-                if (board[(index-11)] === -1) {
+                if (board[(index - 11)] === -1) {
                   adjacentCountBomb++;
                 }
-                if (board[(index-10)] === -1) {
+                if (board[(index - 10)] === -1) {
                   adjacentCountBomb++;
                 }
-                if (board[(index-1)] === -1) {
+                if (board[(index - 1)] === -1) {
                   adjacentCountBomb++;
                 }
-                if (board[(index+9)] === -1) {
+                if (board[(index + 9)] === -1) {
                   adjacentCountBomb++;
                 }
-                if (board[(index+10)] === -1) {
+                if (board[(index + 10)] === -1) {
                   adjacentCountBomb++;
                 }
               } else {
