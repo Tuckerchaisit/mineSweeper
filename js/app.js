@@ -5,14 +5,13 @@
 /*---------------------------- Variables (state) ----------------------------*/
 let board;
 let bombCounts;
-let flagCounts;
-
+let flagCounts =0;
 let adjacentCountBomb;
 let isGameOver = 0; //0 is not over, 1 if the game is over
 
 /*------------------------ Cached Element References ------------------------*/
 const sq = Array.from(document.querySelectorAll(".sq"));
-const msgStat = document.querySelector("#msgStat");
+const flagStat = document.querySelector("#flagStat");
 const resetBtn = document.querySelector("#reset-button")
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -38,13 +37,13 @@ function init() {
   placeBomb();
   //showBomb();
   getAdjacentBomb();
-  
+  flagStat.textContent= `🚩 : ${flagCounts}`;
   render();
   console.log(board);
 }
 
 function reset(){
-    location.reload();
+    window.location.reload();
 }
 
 function render() {
@@ -87,9 +86,12 @@ function handleRightClick(index) {
   }else{
     if(sq[index].textContent==="🚩"){
       sq[index].textContent="";
+      flagCounts--;
+      flagStat.textContent= `🚩 : ${flagCounts}`;
     }else{
       sq[index].textContent="🚩";
       flagCounts++;
+      flagStat.textContent= `🚩 : ${flagCounts}`;
     }
   }
 }
