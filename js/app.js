@@ -8,17 +8,19 @@ let bombCounts;
 let flagCounts;
 let counter = 0;
 let adjacentCountBomb;
-
+let isGameOver = 0; //0 is not over, 1 if the game is over
 
 /*------------------------ Cached Element References ------------------------*/
-const sq = Array.from(document.querySelectorAll(".sq"))
-
+const sq = Array.from(document.querySelectorAll(".sq"));
+const msgStat = document.querySelector("#msgStat");
+const resetBtn = document.querySelector("#reset-button")
 
 /*----------------------------- Event Listeners -----------------------------*/
 sq.forEach((square, index) => {
   square.addEventListener('click', () => handleClick(index));
 }
 )
+// resetBtn.addEventListener('click', location.reload());
 //todo: use contextmenu for right click to flag mine
 
 /*-------------------------------- Functions --------------------------------*/
@@ -28,9 +30,11 @@ init();
 function init() {
   board = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
   bombCounts = 21;
+
   placeBomb();
   showBomb();
   getAdjacentBomb();
+  // hideBoard();
   render();
   console.log(board);
 }
@@ -64,11 +68,23 @@ function showBomb() {
 }
 
 function handleClick(index) {
-  checkEmptySq(index);
+  if(isGameOver===1){
+    return
+  }else{
+    checkEmptySq(index);
+  }
 }
 
 function checkEmptySq(index) {
-  if ((board[index] !== 0) && (board[index] !== -1)) {
+  if(board[index]===-1){
+    showBomb();
+    alert('Game Over, You lost');
+    isGameOver = 1;
+    // sq.forEach(square => square.removeEventListener('click'))
+    //location.reload();
+  }
+
+  if ((board[index] !== 0) && (board[index] !== -1)) { // if there's no bomb and the sq is not empty then show the adjacentBomb number on the sq
     sq[index].textContent = board[index];
   } 
   setTimeout(() => {
@@ -145,7 +161,7 @@ function checkEmptySq(index) {
     
 
   }, 10)
-  void sq[index].offsetHeight;
+  
 }
 
 function getAdjacentBomb() {
@@ -311,3 +327,12 @@ function isBottomEdge(index) {
     return true;
   }
 }
+
+// function hideBoard(){
+//   for(let i=0; i<board.length; i++){
+//     if(board[i]!==-1){
+
+//       sq[i].textContent="";
+//     }
+//   }
+// }
